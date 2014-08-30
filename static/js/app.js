@@ -60,20 +60,16 @@
         });
     }
     function displayMovies(data) {
-        data.results.forEach(function(movie) {
-            var imageSrc = config.images.base_url + config.images.poster_sizes[1] + movie.poster_path;
-            var htmlStr = [
-                            '<div class="col-md-4 portfolio-item">',
-                                '<a href="/view/'+movie.id+'">',
-                                    '<img class="img-responsive" src="' + imageSrc + '" alt="">',
-                                '</a>',
-                                '<h9>',
-                                    '<a href="/view/'+movie.id+'">' + movie.title +'</a>',
-                                '</h9>',
-                            '</div>'
-                            ];
-            $('.movies-list').append($(htmlStr.join('')));
-        });
+
+    	var source   = $("#tpl-movie-list").html();
+		var template = Handlebars.compile(source);
+    	
+    	var markup = template(data.results);
+    	$('.movies-list').html(markup)
+
+        
+     
+        
     }
 
     function loadNowShowing() {

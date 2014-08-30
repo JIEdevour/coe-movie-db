@@ -2,9 +2,10 @@
 <head>
     <title>Module Name</title>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+    	
 </head>
 
-<body  background='https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQg4DtPad054HvyxvFttJ6yc6A46PEJwGhEyvbzMymCjVllrcZ-dgVBmouTuw'>
+<body>
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
@@ -39,10 +40,28 @@
         </div><!-- /.row -->
     </div><!-- /.container -->
 
+
     <script src="/static/js/vendors/jquery.js"></script>
     <script src="/static/js/vendors/bootstrap.min.js"></script>
+    <script src="/static/js/handlebars.js"></script>
     <script src="/static/js/app.js"></script>
-    <script type="text/javascript">initialize(setEventHandlers);</script>
+    
+    {% raw %}
+    <script id="tpl-movie-list" type="text/x-handlebars-template">
+    {{#each this}}
+  			<div class="col-md-4 portfolio-item">
+	                                <a href="/view/{{id}}">
+
+                                    <img class="" src="https://image.tmdb.org/t/p/w130/{{poster_path}}">
+                                </a>
+                                <h9>
+                                    <a href="/view/{{id}}">  {{title}} </a>
+                                </h9>
+                            </div>
+	{{/each}}
+	</script>
+	{% endraw%}
+
 </body>
 
 </html>

@@ -2,6 +2,7 @@
 <head>
     <title>Module Name</title>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.css">
+    	
 </head>
 
 <body>
@@ -39,9 +40,27 @@
         </div><!-- /.row -->
     </div><!-- /.container -->
 
+
     <script src="/static/js/vendors/jquery.js"></script>
     <script src="/static/js/vendors/bootstrap.min.js"></script>
+    <script src="/static/js/handlebars.js"></script>
     <script src="/static/js/app.js"></script>
+    
+    {% raw %}
+    <script id="tpl-movie-list" type="text/x-handlebars-template">
+    {{#each this}}
+  			<div class="col-md-4 portfolio-item">
+	                                <a href="/view/{{id}}">
+
+                                    <img class="img-responsive" src="https://image.tmdb.org/t/p/w130/{{poster_path}}">
+                                </a>
+                                <h9>
+                                    <a href="/view/{{id}}">  {{title}} </a>
+                                </h9>
+                            </div>
+	{{/each}}
+	</script>
+	{% endraw%}
 
 </body>
 
