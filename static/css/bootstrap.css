@@ -6237,3 +6237,27 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.movie-desc{
+	padding: 10px;
+	position: relative;
+	top:-120px;
+}.poster{
+	height: 100px;
+	width: 100px;
+}
+.movie{
+	width: 540px;
+	height: 303px;
+}
+}.backdrop{
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}
+.movie-desc,.movie-title{
+	color: white;
+	padding-left: 10px;
+}
+.poster,.movie-title{
+	float: left;
+}

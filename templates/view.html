@@ -36,30 +36,104 @@
             </div>
 
     <div class="container" style='top: 70px; position: relative;'>
+    <div class='row' id="movies-list" style="display:none"></div>
         <div class="movie-view center" style="text-align:center">
-            <div id="title" ></div>
+            <div id="title"></div>
+            <div id="tagline"></div>	
             <hr>
             <div id="trailer"></div>
             <hr>
             <h3>Synopsis:</h3>
             <div id="overview" style="text-align:left"></div>
             <hr>
-            <h3>Casts:</h3>
-            <div id="casts" style="text-align:left"></div>
-            <hr>
-            <h3>Similar Movies:</h3>
-            <div id="similar" style="text-align:left"></div>
-        </div>
-       <div class='row movies-list' style="display:none">
+            <div style="display:inline;">	
+	            <h3>Casts:</h3>
+	            <div id="casts" style="text-align:left"></div>
+	            <hr>
+	            <p></p>
+	            <hr>
+	            <br>
+	            <br>
+	            <div>
+		            <h1 center>Similar Movies:</h1>
+		            <div id="similar"></div>
+	        	</div>
+        	<hr>
+        	<br>
+        	<br>
+        	<div>
+        	<h2 center>Backdrops</h2>
+        	<div id="backdrop">
+        	</div>
+        	</div>
+        	</div>
       </div>
     </div><!-- /.container -->
     <script src="/static/js/vendors/jquery.js"></script>
     <script src="/static/js/vendors/bootstrap.min.js"></script>
+    <script src="/static/js/handlebars.js"></script>
     <script src="/static/js/app.js"></script>
     <script type="text/javascript">
-      viewMovie("{{id}}");
+    $(document).ready(function(){
+    	viewMovie("{{id}}");
+    });
+      
     </script>
 
+{% raw %}
+
+<script id="tpl-movie-list" type="text/x-handlebars-template">
+	    
+	    {{#each this.result.results}}
+	        <div class="movie col-md-6 movie-link" data-id="{{id}}">
+	                <img width="100%" height="100%" class="img-responsive backdrop" 
+	                    src="{{../config.images.base_url}}{{../config.images.poster_sizes.[3]}}{{backdrop_path}}" >
+	                <div class="movie-desc">
+	                 <a href="/view/{{id}}">
+	                    <img height="100px" class="img-responsive poster" 
+	                        src="{{../config.images.base_url}}{{../config.images.poster_sizes.[1]}}{{poster_path}}">
+	                    <h4 class="movie-title">
+	                        {{title}}
+	                    </h4>
+	                </a>
+	                <br>
+	                <hr>
+	                <div id="{{id}}" style="float:none">
+	                </div> 
+	            </div>
+	        </div>
+	    {{/each}}    
+	</script>
+	<script id="tpl-similar" type="text/x-handlebars-template">
+	    {{#each similar.results}}
+	    	<a href = "/view/{{id}}">
+		    	<div class="col-md-1 casts" class="cast" style="height:300px">
+	                <img class="img-responsive" src="{{../config.images.base_url}}{{../config.images.poster_sizes.[1]}}{{poster_path}}">
+	                {{original_title}}
+	            </div>
+            </a>
+		{{/each}}
+    </script>
+
+    <script id="tpl-casts" type="text/x-handlebars-template">
+	    {{#each result.cast}}
+	    	<div class="col-md-1 casts" class="cast">
+                <img class="img-responsive" src="{{../config.images.base_url}}{{../config.images.poster_sizes.[1]}}{{profile_path}}">
+                {{name}}
+            </div>
+		{{/each}}
+    </script>
+    <script id="tpl-trailer" type="text/x-handlebars-template">
+    	<div class="embed-responsive embed-responsive-4by3">
+	        <iframe src="https://www.youtube.com/embed/{{videos.results.0.key}}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </script>
+    <script id="tpl-backdrop">
+    {{#each backdrop}}
+    	<img style="height:400px"class="img-responsive" src="{{../config.images.base_url}}{{../config.images.poster_sizes.[3]}}{{file_path}}" alt="" style="float:left">
+    	{{/each}}
+    </script>
+{% endraw%}    
 </body>
 
 </html>

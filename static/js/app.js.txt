@@ -1,8 +1,8 @@
-$(function() {
+
     // your code here
     var config;
-    var baseUrl = 'http://api.themoviedb.org/3/',
-        apiKey = '0b1c30459eac1e2bbf48dbd4f72830fa';
+    var baseUrl = 'http://api.themoviedb.org/3/';
+    var apiKey = '0b1c30459eac1e2bbf48dbd4f72830fa';
 
 
     function initialize(callback) {
@@ -11,7 +11,12 @@ $(function() {
         },function(res) {
             config = res;
             console.log(config);
-            callback(config);
+            if(config){
+            	callback(config);	
+            }else{
+            	initialize(callback);
+            }
+            
         });
     }
 
@@ -24,28 +29,27 @@ $(function() {
 
         $('.btn-now-showing').click(function() {
             loadNowShowing();
-            return  false;
         });
 
         loadNowShowing();
 
         $('.btn-up-coming').click(function() {
             upcoming();
-            return  false;
+            
         });
 
         upcoming();
 
         $('.btn-popular').click(function() {
             popular();
-            return  false;
+            
         });
 
         popular();
 
         $('.btn-top-rated').click(function() {
             toprated();
-            return  false;
+            
         });
 
         toprated();
@@ -61,20 +65,14 @@ $(function() {
         });
     }
     function displayMovies(data) {
-        data.results.forEach(function(movie) {
-            var imageSrc = config.images.base_url + config.images.poster_sizes[1] + movie.poster_path;
-            var htmlStr = [
-                            '<div class="col-md-4 portfolio-item">',
-                                '<a href="#">',
-                                    '<img class="img-responsive" src="' + imageSrc + '" alt="">',
-                                '</a>',
-                                '<h9>',
-                                    '<a href="#">' + movie.title +'</a>',
-                                '</h9>',
-                            '</div>'
-                            ];
-            $('.movies-list').append($(htmlStr.join('')));
-        });
+    	var template_values = {
+    		'config': config,
+    		'result': data
+    	};
+    	writeTemplate("tpl-movie-list",template_values,"movies-list");
+        
+     
+        
     }
 
     function loadNowShowing() {
@@ -118,10 +116,78 @@ $(function() {
             displayMovies(response);
         });
     }
+    
+    
+
+    function viewMovie(id){
+    $(".movie-list").hide();
+    console.log(id);
+    url = baseUrl + "movie/"+id;
+    reqParam = {api_key:apiKey};
+    $.get(url,reqParam,function(response){
+
+        $("#title").html(response.original_title);
+        $("#overview").html(response.overview);
+        if(response.tagline){
+        	$("#tagline").html(response.tagline);
+        }else{
+        	$("#tagline").html("No Tagline available");
+        }
+   		});
+        url = baseUrl + "movie/"+id+"/videos";
+        $.get(url,reqParam,function(response){
+        	console.log(response);
+        	writeTemplate("tpl-trailer",response,"trailer");
+        });
+
+        url = baseUrl + "movie/"+id+"/credits";
+        $.get(url,reqParam,function(response){
+        	var template_values = {
+	    		'config': config,
+	    		'result': response
+	    	};
+        	writeTemplate("tpl-casts",template_values,"casts");
+        });
+
+        url = baseUrl + "movie/"+id+"/similar";
+        $.get(url,reqParam,function(response){
+        	var template_values = {
+        		"similar": response,
+        		"config": config
+        	};
+        	console.log(template_values.similar.results)
+            writeTemplate("tpl-similar",template_values,"similar");
+        });
+        url = baseUrl + "movie/"+id+"/images";
+        $.get(url,reqParam,function(response){
+        	var template_values = {
+        		"backdrop": response,
+        		"config": config
+        	};
+        	console.log(template_values.similar.results)
+            writeTemplate("tpl-backdrop",template_values,"backdrop");
+        });
+}
+function writeTemplate(sourceID,values,outputID){
+		var html = getTemplate(sourceID,values)
+
+		$("#"+outputID).html(html);
+    }
+    function getTemplate(sourceID,values){
+    	var source   = $("#"+sourceID).html();
+		var template = Handlebars.compile(source);	
+		var html = template(values);
+		return html;
+    }
+$(document).ready(function(){
+    $(".btn-top-rated, .btn-popular, .btn-up-coming, .btn-now-showing").click(function(){
+        $(".movie-view").hide();
+        $("#movies-list").show();
+    });
     initialize(setEventHandlers);
-
-
 });
+
+
 
 
 
